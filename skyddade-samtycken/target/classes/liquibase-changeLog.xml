@@ -1,0 +1,46 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+  <property name="now" value="sysdate" dbms="oracle"/>
+  <property name="now" value="now()" dbms="mysql"/>
+  <property name="now" value="current_timestamp()" dbms="h2"/>
+
+  <changeSet id="2021-03-15:1" author="iacjo">
+    <comment>Create a general sequence.</comment>
+    <createSequence sequenceName="hibernate_sequence" startValue="20000" incrementBy="1"/>
+  </changeSet>
+
+  <changeSet id="1" author="jonas">
+    <createTable tableName="PERSONS">
+      <column name="ID" type="NUMBER(19)"><constraints nullable="false" primaryKey="true"/></column>
+      <column name="VERSION" type="NUMBER(11)"/>
+      <column name="NAME" type="varchar(255)"/>
+    </createTable>
+  </changeSet>
+
+  <changeSet id="2" author="jonas">
+    <createTable tableName="DEFINITIONS">
+      <column name="ID" type="NUMBER(19)"><constraints nullable="false" primaryKey="true"/></column>
+      <column name="VERSION" type="NUMBER(11)"/>
+      <column name="TEXT" type="varchar(255)"/>
+    </createTable>
+  </changeSet>
+
+  <changeSet id="3" author="jonas">
+    <createTable tableName="CONSENTS">
+      <column name="ID" type="NUMBER(19)"><constraints nullable="false" primaryKey="true"/></column>
+      <column name="VERSION" type="NUMBER(11)"/>
+      <column name="PERSON" type="NUMBER(19)">
+        <constraints nullable="false"
+          foreignKeyName="fk_person"
+          references="PERSONS(ID)"/>
+      </column>
+      <column name="DEFINITION" type="NUMBER(19)">
+        <constraints nullable="false"
+          foreignKeyName="fk_definition"
+          references="DEFINITIONS(ID)"/>
+      </column>
+    </createTable>
+  </changeSet>
+</databaseChangeLog>
